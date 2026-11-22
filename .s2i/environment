@@ -1,0 +1,11 @@
+# Red Hat OpenShift PHP S2I Configuration
+# Documentation: https://github.com/sclorg/s2i-php-container
+
+# Document root relative to application root
+DOCUMENTROOT=/
+
+# PHP Configuration
+PHP_MEMORY_LIMIT=256M
+PHP_MAX_EXECUTION_TIME=60
+OPCACHE_ENABLE=true
+OPCACHE_MEMORY_CONSUMPTION=128

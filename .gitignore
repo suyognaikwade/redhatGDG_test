@@ -1,0 +1,15 @@
+# Composer
+/vendor/
+composer.lock
+
+# Temporary & simulation state files
+/tmp/
+*.tmp
+*.log
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

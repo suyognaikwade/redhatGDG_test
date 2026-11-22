@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redhatgdg-test
+  labels:
+    app: redhatgdg-test
+    app.kubernetes.io/part-of: redhatgdg-test
+    app.kubernetes.io/name: php-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redhatgdg-test
+  template:
+    metadata:
+      labels:
+        app: redhatgdg-test
+    spec:
+      containers:
+        - name: php-app
+          image: image-registry.openshift-image-registry.svc:5000/myproject/redhatgdg-test:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz.php
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready.php
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redhatgdg-test
+  labels:
+    app: redhatgdg-test
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: redhatgdg-test
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: redhatgdg-test
+  labels:
+    app: redhatgdg-test
+spec:
+  to:
+    kind: Service
+    name: redhatgdg-test
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

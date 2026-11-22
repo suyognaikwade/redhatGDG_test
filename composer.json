@@ -1,0 +1,19 @@
+{
+  "name": "suyognaikwade/redhat-openshift-php-test",
+  "description": "Simple and interactive PHP test project for Red Hat OpenShift",
+  "type": "project",
+  "keywords": ["openshift", "redhat", "php", "kubernetes", "s2i", "cloud-native"],
+  "homepage": "https://github.com/suyognaikwade/redhatGDG_test",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Suyog Naikwade"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "scripts": {
+    "test": "php tests/test_endpoints.php"
+  }
+}
