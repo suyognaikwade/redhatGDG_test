@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 /**
- * Red Hat OpenShift PHP Test Application
- * Author: Suyog Naikwade
+ * Red Hat OpenShift PHP Test Application & GDG Pune Event Hub
+ * Venue: Human Cloud, Pune
  */
 
 $podHostname = gethostname() ?: 'unknown-host';
@@ -29,36 +29,26 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenShift PHP Test App - <?= htmlspecialchars($podHostname, ENT_QUOTES, 'UTF-8') ?></title>
+    <title>OpenShift PHP App | GDG @ HumanCloud</title>
     <style>
         :root {
             --rh-red: #EE0000;
             --rh-red-dark: #A30000;
-            --rh-black: #151515;
-            --rh-dark: #1F2937;
-            --rh-gray: #374151;
-            --rh-light-gray: #F3F4F6;
-            --rh-border: #E5E7EB;
-            --rh-card-bg: #FFFFFF;
-            --rh-text-main: #111827;
-            --rh-text-muted: #6B7280;
+            --rh-black: #0B0F17;
+            --rh-dark: #111827;
+            --rh-sidebar: #0F172A;
+            --rh-card-bg: #1E293B;
+            --rh-border: #334155;
+            --rh-text-main: #F8FAFC;
+            --rh-text-muted: #94A3B8;
             --rh-success: #10B981;
             --rh-danger: #EF4444;
             --rh-warning: #F59E0B;
-            --rh-blue: #2563EB;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --rh-black: #0B0F17;
-                --rh-dark: #111827;
-                --rh-gray: #1F2937;
-                --rh-light-gray: #1E293B;
-                --rh-border: #334155;
-                --rh-card-bg: #1E293B;
-                --rh-text-main: #F9FAFB;
-                --rh-text-muted: #94A3B8;
-            }
+            --rh-blue: #38BDF8;
+            --gdg-blue: #4285F4;
+            --gdg-red: #EA4335;
+            --gdg-yellow: #FBBC04;
+            --gdg-green: #34A853;
         }
 
         * {
@@ -68,62 +58,229 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--rh-black);
             color: var(--rh-text-main);
-            line-height: 1.5;
-            padding: 24px 16px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Top Brand Header */
-        .header {
-            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-            border-top: 4px solid var(--rh-red);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            min-height: 100vh;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
         }
 
-        .header-title-box {
+        /* Responsive App Layout */
+        .app-layout {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            background-color: var(--rh-sidebar);
+            border-right: 1px solid var(--rh-border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--rh-border);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
 
-        .rh-logo {
-            width: 48px;
-            height: 48px;
+        .brand-logo-combo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rh-badge-logo {
+            width: 36px;
+            height: 36px;
             background-color: var(--rh-red);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #FFF;
             font-weight: 800;
-            font-size: 20px;
-            letter-spacing: -1px;
-            box-shadow: 0 4px 12px rgba(238, 0, 0, 0.4);
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(238, 0, 0, 0.4);
         }
 
-        .header-title {
+        .gdg-badge-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--gdg-blue), var(--gdg-green));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #FFF;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--rh-text-muted);
+        }
+
+        /* Nav List & Tabs */
+        .sidebar-nav {
+            padding: 16px 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-category {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748B;
+            padding: 10px 12px 4px;
+        }
+
+        .nav-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: none;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: #94A3B8;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab-btn:hover {
+            color: #F8FAFC;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab-btn.active {
             color: #FFFFFF;
-            font-size: 1.5rem;
+            background: linear-gradient(90deg, rgba(238, 0, 0, 0.15) 0%, rgba(238, 0, 0, 0.05) 100%);
+            border-color: rgba(238, 0, 0, 0.4);
+            border-left: 3px solid var(--rh-red);
+        }
+
+        .nav-tab-btn.event-btn.active {
+            background: linear-gradient(90deg, rgba(66, 133, 244, 0.15) 0%, rgba(52, 168, 83, 0.05) 100%);
+            border-color: rgba(66, 133, 244, 0.4);
+            border-left: 3px solid var(--gdg-blue);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            font-size: 0.6875rem;
+            padding: 2px 7px;
+            border-radius: 9999px;
             font-weight: 700;
         }
 
-        .header-subtitle {
-            color: #94A3B8;
+        .nav-badge.live {
+            background: rgba(238, 0, 0, 0.2);
+            color: #FF6666;
+            border: 1px solid rgba(238, 0, 0, 0.4);
+        }
+
+        .nav-badge.today {
+            background: rgba(66, 133, 244, 0.2);
+            color: #60A5FA;
+            border: 1px solid rgba(66, 133, 244, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--rh-border);
+            font-size: 0.75rem;
+            color: var(--rh-text-muted);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content Container */
+        .main-content {
+            flex-grow: 1;
+            padding: 28px 32px;
+            overflow-y: auto;
+            max-width: 1300px;
+        }
+
+        /* Tab Content Switching */
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Top Header Bar */
+        .top-bar {
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            border-top: 4px solid var(--rh-red);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .top-bar.event-bar {
+            border-top: 4px solid var(--gdg-blue);
+        }
+
+        .header-title-box h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #FFF;
+        }
+
+        .header-title-box p {
+            color: var(--rh-text-muted);
             font-size: 0.875rem;
         }
 
@@ -131,6 +288,7 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            align-items: center;
         }
 
         .badge {
@@ -163,6 +321,12 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             border: 1px solid rgba(238, 0, 0, 0.3);
         }
 
+        .badge.gdg {
+            background: rgba(66, 133, 244, 0.15);
+            color: #93C5FD;
+            border: 1px solid rgba(66, 133, 244, 0.3);
+        }
+
         .pulse-dot {
             width: 8px;
             height: 8px;
@@ -177,10 +341,10 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             50% { opacity: 0.4; transform: scale(0.85); }
         }
 
-        /* Metric Cards Grid */
+        /* Grid & Cards */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
             gap: 20px;
             margin-bottom: 24px;
         }
@@ -190,7 +354,7 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             border: 1px solid var(--rh-border);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
 
         .card-header {
@@ -236,7 +400,7 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             max-width: 65%;
         }
 
-        /* Buttons & Controls */
+        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -277,12 +441,20 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
         }
 
         .btn-secondary {
-            background-color: var(--rh-light-gray);
-            color: var(--rh-text-main);
-            border-color: var(--rh-border);
+            background-color: #334155;
+            color: #F8FAFC;
+            border-color: #475569;
         }
         .btn-secondary:hover {
-            background-color: var(--rh-border);
+            background-color: #475569;
+        }
+
+        .btn-gdg {
+            background: linear-gradient(135deg, var(--gdg-blue) 0%, #1D4ED8 100%);
+            color: #FFF;
+        }
+        .btn-gdg:hover {
+            opacity: 0.95;
         }
 
         .action-row {
@@ -309,7 +481,7 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             padding: 8px 12px;
             border: 1px solid var(--rh-border);
             border-radius: 6px;
-            background-color: var(--rh-light-gray);
+            background-color: #0F172A;
             color: var(--rh-text-main);
             font-size: 0.875rem;
             font-family: inherit;
@@ -340,7 +512,6 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             color: #F87171;
         }
 
-        /* Tables & Cheatsheet */
         .table-container {
             max-height: 380px;
             overflow-y: auto;
@@ -361,7 +532,7 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
         }
 
         th {
-            background-color: var(--rh-light-gray);
+            background-color: #0F172A;
             color: var(--rh-text-muted);
             font-weight: 600;
             position: sticky;
@@ -370,7 +541,7 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
         }
 
         code {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             padding: 2px 6px;
             border-radius: 4px;
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -404,306 +575,741 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
             color: #FFFFFF;
             background: #334155;
         }
+
+        /* GDG Event Specific Styles */
+        .event-banner {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 1px solid rgba(66, 133, 244, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gdg-blue), var(--gdg-red), var(--gdg-yellow), var(--gdg-green));
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            padding-left: 24px;
+            border-left: 2px solid var(--rh-border);
+            margin-top: 16px;
+        }
+
+        .timeline-item {
+            position: relative;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -31px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--gdg-blue);
+            border: 2px solid var(--rh-sidebar);
+            box-shadow: 0 0 6px var(--gdg-blue);
+        }
+
+        .timeline-dot.highlight {
+            background-color: var(--rh-red);
+            box-shadow: 0 0 8px var(--rh-red);
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--gdg-blue);
+            margin-bottom: 2px;
+        }
+
+        .timeline-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .timeline-desc {
+            font-size: 0.8125rem;
+            color: var(--rh-text-muted);
+            margin-top: 4px;
+        }
+
+        .speaker-card {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            background: #0F172A;
+            border: 1px solid var(--rh-border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+        }
+
+        .speaker-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--rh-red), #F97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #FFF;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .speaker-avatar.gdg {
+            background: linear-gradient(135deg, var(--gdg-blue), var(--gdg-green));
+        }
+
+        .speaker-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .speaker-info p {
+            font-size: 0.75rem;
+            color: var(--rh-text-muted);
+        }
+
+        .partner-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .partner-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            background: #0F172A;
+            border: 1px solid var(--rh-border);
+            color: #E2E8F0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .app-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--rh-border);
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .nav-tab-btn {
+                width: auto;
+            }
+            .main-content {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Top Header -->
-    <header class="header">
-        <div class="header-title-box">
-            <div class="rh-logo">RH</div>
-            <div>
-                <h1 class="header-title">Red Hat OpenShift PHP Test Application</h1>
-                <p class="header-subtitle">Containerized PHP Runtime &amp; Kubernetes Probe Validation</p>
+<div class="app-layout">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo-combo">
+                <div class="rh-badge-logo" title="Red Hat OpenShift">RH</div>
+                <div class="gdg-badge-logo" title="GDG Pune">GDG</div>
+            </div>
+            <div class="brand-text">
+                <h1>Red Hat &times; GDG</h1>
+                <p>OpenShift &bull; HumanCloud</p>
             </div>
         </div>
-        <div class="badge-group">
-            <span class="badge red">
-                <span class="pulse-dot"></span>
-                Pod: <strong id="header-pod-name"><?= htmlspecialchars($podHostname, ENT_QUOTES, 'UTF-8') ?></strong>
-            </span>
-            <span class="badge">
-                Namespace: <strong><?= htmlspecialchars($namespace, ENT_QUOTES, 'UTF-8') ?></strong>
-            </span>
-            <button class="btn btn-secondary" onclick="fetchMetrics()" title="Refresh live telemetry">
-                &#x21bb; Refresh
+
+        <nav class="sidebar-nav">
+            <div class="nav-category">Main Navigation</div>
+            
+            <button class="nav-tab-btn active" id="btn-tab-openshift" onclick="switchTab('openshift')">
+                <span class="nav-icon">&#9881;</span>
+                <span>OpenShift Dashboard</span>
+                <span class="nav-badge live">Live</span>
             </button>
-        </div>
-    </header>
 
-    <!-- Cards Grid -->
-    <div class="grid">
-        <!-- 1. Pod Identity & Networking -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">&#128640; Pod Identity &amp; Cluster</h2>
-                <span class="badge success">Active</span>
-            </div>
-            <ul class="info-list">
-                <li class="info-item">
-                    <span class="info-label">Hostname / Pod</span>
-                    <span class="info-value"><?= htmlspecialchars($podHostname, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Namespace</span>
-                    <span class="info-value"><?= htmlspecialchars($namespace, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Pod IP</span>
-                    <span class="info-value"><?= htmlspecialchars($podIp, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Client IP</span>
-                    <span class="info-value"><?= htmlspecialchars($clientIp, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">K8s API Service</span>
-                    <span class="info-value"><?= htmlspecialchars($k8sHost, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">OpenShift Build</span>
-                    <span class="info-value"><?= htmlspecialchars($buildName, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-            </ul>
-        </div>
+            <button class="nav-tab-btn event-btn" id="btn-tab-gdg" onclick="switchTab('gdg')">
+                <span class="nav-icon">&#127915;</span>
+                <span>GDG Event Details</span>
+                <span class="nav-badge today">Today</span>
+            </button>
 
-        <!-- 2. PHP Runtime Metrics -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">&#9881; PHP Runtime &amp; Memory</h2>
-                <span class="badge">PHP <?= htmlspecialchars(PHP_VERSION, ENT_QUOTES, 'UTF-8') ?></span>
-            </div>
-            <ul class="info-list">
-                <li class="info-item">
-                    <span class="info-label">PHP SAPI</span>
-                    <span class="info-value"><?= htmlspecialchars(PHP_SAPI, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Memory Used</span>
-                    <span class="info-value" id="val-memory-current"><?= $memoryUsedMb ?> MB</span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Peak Memory</span>
-                    <span class="info-value"><?= $memoryPeakMb ?> MB</span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Memory Limit</span>
-                    <span class="info-value"><?= htmlspecialchars($memoryLimit, ENT_QUOTES, 'UTF-8') ?></span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Loaded Extensions</span>
-                    <span class="info-value"><?= count(get_loaded_extensions()) ?> extensions</span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">OPcache Status</span>
-                    <span class="info-value"><?= function_exists('opcache_get_status') && !empty(opcache_get_status()) ? 'Enabled' : 'Disabled' ?></span>
-                </li>
-            </ul>
-        </div>
+            <div class="nav-category">Quick Jump</div>
+            <button class="nav-tab-btn" onclick="switchTab('openshift'); scrollToElement('section-probes');">
+                <span class="nav-icon">&#128269;</span>
+                <span>Health Probes</span>
+            </button>
 
-        <!-- 3. Kubernetes Probes Simulation -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">&#128269; Kubernetes Probes</h2>
-                <span class="badge" id="probe-summary-badge">Probes Ready</span>
+            <button class="nav-tab-btn" onclick="switchTab('openshift'); scrollToElement('section-stress');">
+                <span class="nav-icon">&#128293;</span>
+                <span>HPA Load Test</span>
+            </button>
+
+            <button class="nav-tab-btn" onclick="switchTab('openshift'); scrollToElement('section-db');">
+                <span class="nav-icon">&#128452;</span>
+                <span>Database Test</span>
+            </button>
+
+            <button class="nav-tab-btn" onclick="switchTab('openshift'); scrollToElement('section-env');">
+                <span class="nav-icon">&#128203;</span>
+                <span>Environment Vars</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="font-weight:600; color:#FFF;">Pod Status</span>
+                <span style="color:var(--rh-success); display:flex; align-items:center; gap:4px;">
+                    <span class="pulse-dot" style="background-color:var(--rh-success);"></span> Running
+                </span>
             </div>
-            <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
-                Simulate unhealthy or maintenance states to test OpenShift self-healing pod restarts and traffic routing.
-            </p>
-            <ul class="info-list">
-                <li class="info-item">
-                    <span class="info-label">Liveness (<a href="healthz.php" target="_blank" style="color:var(--rh-blue);">/healthz.php</a>)</span>
-                    <span class="badge <?= $isUnhealthy ? 'danger' : 'success' ?>" id="live-liveness-badge">
-                        <?= $isUnhealthy ? 'DOWN (503)' : 'UP (200)' ?>
+            <div style="font-size:0.7rem; color:var(--rh-text-muted); word-break:break-all;">
+                Host: <?= htmlspecialchars($podHostname, ENT_QUOTES, 'UTF-8') ?>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- ============================================== -->
+        <!-- TAB 1: OPENSHIFT DASHBOARD                    -->
+        <!-- ============================================== -->
+        <div id="tab-openshift" class="tab-pane active">
+            <!-- Top Header Bar -->
+            <header class="top-bar">
+                <div class="header-title-box">
+                    <h2>Red Hat OpenShift PHP Test Application</h2>
+                    <p>Containerized PHP Runtime, S2I Validation &amp; Kubernetes Health Telemetry</p>
+                </div>
+                <div class="badge-group">
+                    <span class="badge red">
+                        <span class="pulse-dot"></span>
+                        Pod: <strong id="header-pod-name"><?= htmlspecialchars($podHostname, ENT_QUOTES, 'UTF-8') ?></strong>
                     </span>
-                </li>
-                <li class="info-item">
-                    <span class="info-label">Readiness (<a href="ready.php" target="_blank" style="color:var(--rh-blue);">/ready.php</a>)</span>
-                    <span class="badge <?= $isNotReady ? 'danger' : 'success' ?>" id="live-readiness-badge">
-                        <?= $isNotReady ? 'NOT READY (503)' : 'READY (200)' ?>
+                    <span class="badge">
+                        Namespace: <strong><?= htmlspecialchars($namespace, ENT_QUOTES, 'UTF-8') ?></strong>
                     </span>
-                </li>
-            </ul>
-            <div class="action-row">
-                <button class="btn <?= $isUnhealthy ? 'btn-success' : 'btn-danger' ?>" id="btn-toggle-liveness" onclick="toggleProbe('liveness')">
-                    <?= $isUnhealthy ? 'Restore Liveness (200)' : 'Simulate Crash (503)' ?>
-                </button>
-                <button class="btn <?= $isNotReady ? 'btn-success' : 'btn-danger' ?>" id="btn-toggle-readiness" onclick="toggleProbe('readiness')">
-                    <?= $isNotReady ? 'Restore Readiness (200)' : 'Simulate Not Ready (503)' ?>
-                </button>
-            </div>
-            <div class="alert-box" id="probe-alert"></div>
-        </div>
-    </div>
+                    <button class="btn btn-secondary" onclick="fetchMetrics()" title="Refresh live telemetry">
+                        &#x21bb; Refresh
+                    </button>
+                </div>
+            </header>
 
-    <!-- Interactive Tools Grid -->
-    <div class="grid">
-        <!-- CPU Stress (HPA testing) -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">&#128293; Autoscaler (HPA) CPU Stress Test</h2>
-                <span class="badge">HPA Test</span>
+            <!-- Cards Grid -->
+            <div class="grid">
+                <!-- 1. Pod Identity & Cluster -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">&#128640; Pod Identity &amp; Cluster</h3>
+                        <span class="badge success">Active</span>
+                    </div>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">Hostname / Pod</span>
+                            <span class="info-value"><?= htmlspecialchars($podHostname, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Namespace</span>
+                            <span class="info-value"><?= htmlspecialchars($namespace, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Pod IP</span>
+                            <span class="info-value"><?= htmlspecialchars($podIp, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Client IP</span>
+                            <span class="info-value"><?= htmlspecialchars($clientIp, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">K8s API Service</span>
+                            <span class="info-value"><?= htmlspecialchars($k8sHost, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">OpenShift Build</span>
+                            <span class="info-value"><?= htmlspecialchars($buildName, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 2. PHP Runtime Metrics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">&#9881; PHP Runtime &amp; Memory</h3>
+                        <span class="badge">PHP <?= htmlspecialchars(PHP_VERSION, ENT_QUOTES, 'UTF-8') ?></span>
+                    </div>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">PHP SAPI</span>
+                            <span class="info-value"><?= htmlspecialchars(PHP_SAPI, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Memory Used</span>
+                            <span class="info-value" id="val-memory-current"><?= $memoryUsedMb ?> MB</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Peak Memory</span>
+                            <span class="info-value"><?= $memoryPeakMb ?> MB</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Memory Limit</span>
+                            <span class="info-value"><?= htmlspecialchars($memoryLimit, ENT_QUOTES, 'UTF-8') ?></span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Loaded Extensions</span>
+                            <span class="info-value"><?= count(get_loaded_extensions()) ?> extensions</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">OPcache Status</span>
+                            <span class="info-value"><?= function_exists('opcache_get_status') && !empty(opcache_get_status()) ? 'Enabled' : 'Disabled' ?></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 3. Kubernetes Probes Simulation -->
+                <div class="card" id="section-probes">
+                    <div class="card-header">
+                        <h3 class="card-title">&#128269; Kubernetes Probes</h3>
+                        <span class="badge" id="probe-summary-badge">Probes Ready</span>
+                    </div>
+                    <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
+                        Simulate unhealthy or maintenance states to test OpenShift self-healing pod restarts and traffic routing.
+                    </p>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">Liveness (<a href="healthz.php" target="_blank" style="color:var(--rh-blue);">/healthz.php</a>)</span>
+                            <span class="badge <?= $isUnhealthy ? 'danger' : 'success' ?>" id="live-liveness-badge">
+                                <?= $isUnhealthy ? 'DOWN (503)' : 'UP (200)' ?>
+                            </span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Readiness (<a href="ready.php" target="_blank" style="color:var(--rh-blue);">/ready.php</a>)</span>
+                            <span class="badge <?= $isNotReady ? 'danger' : 'success' ?>" id="live-readiness-badge">
+                                <?= $isNotReady ? 'NOT READY (503)' : 'READY (200)' ?>
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="action-row">
+                        <button class="btn <?= $isUnhealthy ? 'btn-success' : 'btn-danger' ?>" id="btn-toggle-liveness" onclick="toggleProbe('liveness')">
+                            <?= $isUnhealthy ? 'Restore Liveness (200)' : 'Simulate Crash (503)' ?>
+                        </button>
+                        <button class="btn <?= $isNotReady ? 'btn-success' : 'btn-danger' ?>" id="btn-toggle-readiness" onclick="toggleProbe('readiness')">
+                            <?= $isNotReady ? 'Restore Readiness (200)' : 'Simulate Not Ready (503)' ?>
+                        </button>
+                    </div>
+                    <div class="alert-box" id="probe-alert"></div>
+                </div>
             </div>
-            <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
-                Spike CPU load with a controlled cryptographic SHA256 loop to trigger OpenShift Horizontal Pod Autoscaling.
-            </p>
-            <div class="form-group">
-                <label for="stress-duration">Stress Duration (Seconds)</label>
-                <select id="stress-duration" class="form-control">
-                    <option value="2">2 Seconds (Quick verification)</option>
-                    <option value="5" selected>5 Seconds (Moderate load)</option>
-                    <option value="10">10 Seconds (High CPU spike)</option>
-                </select>
+
+            <!-- Interactive Tools Grid -->
+            <div class="grid">
+                <!-- CPU Stress (HPA testing) -->
+                <div class="card" id="section-stress">
+                    <div class="card-header">
+                        <h3 class="card-title">&#128293; Autoscaler (HPA) CPU Stress Test</h3>
+                        <span class="badge">HPA Test</span>
+                    </div>
+                    <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
+                        Spike CPU load with a controlled cryptographic SHA256 loop to trigger OpenShift Horizontal Pod Autoscaling.
+                    </p>
+                    <div class="form-group">
+                        <label for="stress-duration">Stress Duration (Seconds)</label>
+                        <select id="stress-duration" class="form-control">
+                            <option value="2">2 Seconds (Quick verification)</option>
+                            <option value="5" selected>5 Seconds (Moderate load)</option>
+                            <option value="10">10 Seconds (High CPU spike)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="btn-cpu-stress" onclick="runCpuStress()">
+                        Run CPU Load Test
+                    </button>
+                    <div class="alert-box" id="stress-alert"></div>
+                </div>
+
+                <!-- Database Connection Test -->
+                <div class="card" id="section-db">
+                    <div class="card-header">
+                        <h3 class="card-title">&#128452; Database Connectivity Test</h3>
+                        <span class="badge">PDO</span>
+                    </div>
+                    <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
+                        Verify pod connection to OpenShift MySQL, MariaDB, or PostgreSQL service containers.
+                    </p>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="form-group">
+                            <label>Driver</label>
+                            <select id="db-driver" class="form-control" onchange="updateDefaultPort()">
+                                <option value="mysql">MySQL / MariaDB</option>
+                                <option value="pgsql">PostgreSQL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Port</label>
+                            <input type="number" id="db-port" class="form-control" value="3306">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Database Host / Service Name</label>
+                        <input type="text" id="db-host" class="form-control" placeholder="e.g. mysql or postgresql" value="<?= htmlspecialchars((string)(getenv('DATABASE_SERVICE_NAME') ?: (getenv('MYSQL_HOST') ?: '127.0.0.1')), ENT_QUOTES, 'UTF-8') ?>">
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="form-group">
+                            <label>Database</label>
+                            <input type="text" id="db-name" class="form-control" value="<?= htmlspecialchars((string)(getenv('MYSQL_DATABASE') ?: (getenv('POSTGRESQL_DATABASE') ?: 'testdb')), ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="db-user" class="form-control" value="<?= htmlspecialchars((string)(getenv('MYSQL_USER') ?: (getenv('POSTGRESQL_USER') ?: 'root')), ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="db-pass" class="form-control" placeholder="Leave empty if not required" value="">
+                    </div>
+                    <button class="btn btn-primary" id="btn-db-test" onclick="testDatabaseConnection()">
+                        Test Connection
+                    </button>
+                    <div class="alert-box" id="db-alert"></div>
+                </div>
             </div>
-            <button class="btn btn-primary" id="btn-cpu-stress" onclick="runCpuStress()">
-                Run CPU Load Test
-            </button>
-            <div class="alert-box" id="stress-alert"></div>
+
+            <!-- Environment Variables & OpenShift CLI Cheatsheet -->
+            <div class="grid">
+                <!-- Environment Variables -->
+                <div class="card" id="section-env">
+                    <div class="card-header">
+                        <h3 class="card-title">&#128203; Injected Environment Variables</h3>
+                        <input type="text" id="env-filter" placeholder="Search variables..." class="form-control" style="width: 180px; padding: 4px 8px; font-size: 0.75rem;" oninput="filterEnvTable()">
+                    </div>
+                    <div class="table-container">
+                        <table id="env-table">
+                            <thead>
+                                <tr>
+                                    <th>Variable Key</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="env-table-body">
+                                <?php
+                                $sensitiveKeys = ['KEY', 'SECRET', 'PASSWORD', 'TOKEN', 'AUTH', 'CREDENTIAL'];
+                                $env = array_merge(is_array($_ENV) ? $_ENV : [], getenv() ?: []);
+                                ksort($env);
+                                foreach ($env as $key => $val):
+                                    if (!is_string($key) || !is_scalar($val)) continue;
+                                    $valStr = (string) $val;
+                                    $isMasked = false;
+                                    foreach ($sensitiveKeys as $sk) {
+                                        if (stripos($key, $sk) !== false) {
+                                            $isMasked = true;
+                                            break;
+                                        }
+                                    }
+                                    $displayVal = $isMasked
+                                        ? (strlen($valStr) > 4 ? substr($valStr, 0, 2) . '••••' . substr($valStr, -2) : '••••••••')
+                                        : $valStr;
+                                ?>
+                                <tr>
+                                    <td><code><?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?></code></td>
+                                    <td><span style="color:var(--rh-text-muted);"><?= htmlspecialchars($displayVal, ENT_QUOTES, 'UTF-8') ?></span></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- OpenShift Quick CLI Cheatsheet -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">&#9000; OpenShift CLI (oc) Cheatsheet</h3>
+                        <span class="badge">oc commands</span>
+                    </div>
+                    <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
+                        Copy and run these commands from your local terminal to manage this deployment:
+                    </p>
+                    <div style="display:flex; flex-direction:column; gap: 8px;">
+                        <div>
+                            <span style="font-size:0.75rem; color:var(--rh-text-muted);">1. View Pods &amp; Status</span>
+                            <div class="cli-code">
+                                <span>oc get pods -w</span>
+                                <button class="copy-btn" onclick="copyText('oc get pods -w')">Copy</button>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="font-size:0.75rem; color:var(--rh-text-muted);">2. View Real-time Logs</span>
+                            <div class="cli-code">
+                                <span>oc logs -f -l app=redhatgdgtest</span>
+                                <button class="copy-btn" onclick="copyText('oc logs -f -l app=redhatgdgtest')">Copy</button>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="font-size:0.75rem; color:var(--rh-text-muted);">3. Scale Replicas</span>
+                            <div class="cli-code">
+                                <span>oc scale deployment/redhatgdgtest --replicas=3</span>
+                                <button class="copy-btn" onclick="copyText('oc scale deployment/redhatgdgtest --replicas=3')">Copy</button>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="font-size:0.75rem; color:var(--rh-text-muted);">4. Execute Shell in Pod</span>
+                            <div class="cli-code">
+                                <span>oc rsh deployment/redhatgdgtest</span>
+                                <button class="copy-btn" onclick="copyText('oc rsh deployment/redhatgdgtest')">Copy</button>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="font-size:0.75rem; color:var(--rh-text-muted);">5. Enable SSL / HTTPS Route</span>
+                            <div class="cli-code">
+                                <span>oc patch route redhatgdgtest -p '{"spec":{"tls":{"termination":"edge"}}}'</span>
+                                <button class="copy-btn" onclick="copyText('oc patch route redhatgdgtest -p \'{\&quot;spec\&quot;:{\&quot;tls\&quot;:{\&quot;termination\&quot;:\&quot;edge\&quot;}}}\'')">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Database Connection Test -->
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">&#128452; Database Connectivity Test</h2>
-                <span class="badge">PDO</span>
-            </div>
-            <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
-                Verify pod connection to OpenShift MySQL, MariaDB, or PostgreSQL service containers.
-            </p>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div class="form-group">
-                    <label>Driver</label>
-                    <select id="db-driver" class="form-control" onchange="updateDefaultPort()">
-                        <option value="mysql">MySQL / MariaDB</option>
-                        <option value="pgsql">PostgreSQL</option>
-                    </select>
+        <!-- ============================================== -->
+        <!-- TAB 2: GDG EVENT DETAILS @ HUMANCLOUD          -->
+        <!-- ============================================== -->
+        <div id="tab-gdg" class="tab-pane">
+            <!-- Top Event Header Bar -->
+            <header class="top-bar event-bar">
+                <div class="header-title-box">
+                    <h2>Google Developer Groups (GDG) Pune Event</h2>
+                    <p>Build with AI (Gemini) &bull; Pre DevFest Pune '26 Workshop Series 6.0</p>
                 </div>
-                <div class="form-group">
-                    <label>Port</label>
-                    <input type="number" id="db-port" class="form-control" value="3306">
+                <div class="badge-group">
+                    <span class="badge gdg">
+                        <span class="pulse-dot" style="background-color:var(--gdg-blue);"></span>
+                        Happening Today &bull; Nov 22, 2026
+                    </span>
+                    <span class="badge success">
+                        Venue: Human Cloud, Pune
+                    </span>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Database Host / Service Name</label>
-                <input type="text" id="db-host" class="form-control" placeholder="e.g. mysql or postgresql" value="<?= htmlspecialchars((string)(getenv('DATABASE_SERVICE_NAME') ?: (getenv('MYSQL_HOST') ?: '127.0.0.1')), ENT_QUOTES, 'UTF-8') ?>">
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div class="form-group">
-                    <label>Database</label>
-                    <input type="text" id="db-name" class="form-control" value="<?= htmlspecialchars((string)(getenv('MYSQL_DATABASE') ?: (getenv('POSTGRESQL_DATABASE') ?: 'testdb')), ENT_QUOTES, 'UTF-8') ?>">
-                </div>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="db-user" class="form-control" value="<?= htmlspecialchars((string)(getenv('MYSQL_USER') ?: (getenv('POSTGRESQL_USER') ?: 'root')), ENT_QUOTES, 'UTF-8') ?>">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="db-pass" class="form-control" placeholder="Leave empty if not required" value="">
-            </div>
-            <button class="btn btn-primary" id="btn-db-test" onclick="testDatabaseConnection()">
-                Test Connection
-            </button>
-            <div class="alert-box" id="db-alert"></div>
-        </div>
-    </div>
+            </header>
 
-    <!-- Environment Variables & OpenShift CLI Cheatsheet -->
-    <div class="grid">
-        <!-- Environment Variables -->
-        <div class="card" style="grid-column: span 1;">
-            <div class="card-header">
-                <h2 class="card-title">&#128203; Injected Environment Variables</h2>
-                <input type="text" id="env-filter" placeholder="Search variables..." class="form-control" style="width: 180px; padding: 4px 8px; font-size: 0.75rem;" oninput="filterEnvTable()">
-            </div>
-            <div class="table-container">
-                <table id="env-table">
-                    <thead>
-                        <tr>
-                            <th>Variable Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody id="env-table-body">
-                        <?php
-                        $sensitiveKeys = ['KEY', 'SECRET', 'PASSWORD', 'TOKEN', 'AUTH', 'CREDENTIAL'];
-                        $env = array_merge($_ENV, getenv());
-                        ksort($env);
-                        foreach ($env as $key => $val):
-                            if (!is_string($key) || !is_scalar($val)) continue;
-                            $valStr = (string) $val;
-                            $isMasked = false;
-                            foreach ($sensitiveKeys as $sk) {
-                                if (stripos($key, $sk) !== false) {
-                                    $isMasked = true;
-                                    break;
-                                }
-                            }
-                            $displayVal = $isMasked
-                                ? (strlen($valStr) > 4 ? substr($valStr, 0, 2) . '••••' . substr($valStr, -2) : '••••••••')
-                                : $valStr;
-                        ?>
-                        <tr>
-                            <td><code><?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?></code></td>
-                            <td><span style="color:var(--rh-text-muted);"><?= htmlspecialchars($displayVal, ENT_QUOTES, 'UTF-8') ?></span></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <!-- Event Highlight Hero Card -->
+            <div class="event-banner">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+                    <div>
+                        <span style="font-size:0.8125rem; font-weight:700; color:var(--gdg-yellow); text-transform:uppercase; letter-spacing:0.05em;">
+                            Community Workshop &bull; Series 6.0
+                        </span>
+                        <h2 style="font-size:1.6rem; font-weight:800; color:#FFF; margin-top:4px;">
+                            Build with AI &amp; OpenShift Cloud-Native Workshop
+                        </h2>
+                        <p style="color:var(--rh-text-muted); font-size:0.95rem; margin-top:6px; max-width:800px;">
+                            A community-driven, deep-dive technical workshop hosted by <strong>GDG Pune</strong> in collaboration with <strong>Human Cloud</strong> and <strong>Unnati Development (Red Hat Authorized Training Centre)</strong>.
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <span class="badge" style="background:#1E293B; border:1px solid var(--gdg-blue); color:#93C5FD; padding:8px 16px;">
+                            &#128338; 09:00 AM &ndash; 02:00 PM IST
+                        </span>
+                    </div>
+                </div>
 
-        <!-- OpenShift Quick CLI Cheatsheet -->
-        <div class="card" style="grid-column: span 1;">
-            <div class="card-header">
-                <h2 class="card-title">&#9000; OpenShift CLI (oc) Cheatsheet</h2>
-                <span class="badge">oc commands</span>
+                <div class="partner-chips">
+                    <span class="partner-chip">&#127760; <strong>Host:</strong> GDG Pune</span>
+                    <span class="partner-chip">&#127970; <strong>Venue Partner:</strong> Human Cloud</span>
+                    <span class="partner-chip">&#129505; <strong>Tech Partner:</strong> Red Hat Authorized Training (Unnati)</span>
+                </div>
             </div>
-            <p style="font-size: 0.8125rem; color: var(--rh-text-muted); margin-bottom: 12px;">
-                Copy and run these commands from your local terminal to manage this deployment:
-            </p>
-            <div style="display:flex; flex-direction:column; gap: 8px;">
-                <div>
-                    <span style="font-size:0.75rem; color:var(--rh-text-muted);">1. View Pods &amp; Status</span>
-                    <div class="cli-code">
-                        <span>oc get pods -w</span>
-                        <button class="copy-btn" onclick="copyText('oc get pods -w')">Copy</button>
+
+            <!-- Event Info Grid -->
+            <div class="grid">
+                <!-- Location & Venue Details -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">&#128205; Venue &amp; Location Details</h3>
+                        <span class="badge gdg">Human Cloud</span>
+                    </div>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">Venue</span>
+                            <span class="info-value">Human Cloud Headquarters</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Address</span>
+                            <span class="info-value" style="font-size:0.8rem;">Baner &ndash; Pashan Link Road, Pune, Maharashtra</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">City</span>
+                            <span class="info-value">Pune, India (411045)</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Format</span>
+                            <span class="info-value">In-Person Hands-on Lab</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Wi-Fi &amp; Access</span>
+                            <span class="info-value">High-speed Guest Wi-Fi</span>
+                        </li>
+                    </ul>
+
+                    <div style="margin-top:16px; background:#0F172A; border-radius:8px; padding:12px; border:1px solid var(--rh-border);">
+                        <div style="font-size:0.8125rem; font-weight:600; color:#FFF; margin-bottom:4px;">
+                            &#128161; Live OpenShift S2I Demo in Session
+                        </div>
+                        <p style="font-size:0.75rem; color:var(--rh-text-muted);">
+                            This exact repository (<code style="color:var(--rh-blue);">redhatGDG_test</code>) is built to demonstrate OpenShift's <strong>Source-to-Image (S2I)</strong> mechanism during today's lab!
+                        </p>
                     </div>
                 </div>
-                <div>
-                    <span style="font-size:0.75rem; color:var(--rh-text-muted);">2. View Real-time Logs</span>
-                    <div class="cli-code">
-                        <span>oc logs -f -l app=redhatgdg-test</span>
-                        <button class="copy-btn" onclick="copyText('oc logs -f -l app=redhatgdg-test')">Copy</button>
+
+                <!-- Featured Speakers & Facilitators -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">&#128100; Featured Sessions &amp; Speakers</h3>
+                        <span class="badge red">Red Hat &bull; GDG</span>
+                    </div>
+
+                    <!-- Speaker 1 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar">AB</div>
+                        <div class="speaker-info">
+                            <h4>Ashutosh Bhakare</h4>
+                            <p>Red Hat Authorized Instructor &bull; Cloud Architect</p>
+                            <span style="font-size:0.75rem; color:var(--rh-blue); font-weight:500;">
+                                Topic: "Source-to-Image (S2I) &amp; Accelerating Delivery on OpenShift"
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Speaker 2 -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar gdg">GDG</div>
+                        <div class="speaker-info">
+                            <h4>GDG Pune Core Team</h4>
+                            <p>Google Developer Groups Lead Mentors</p>
+                            <span style="font-size:0.75rem; color:#34D399; font-weight:500;">
+                                Topic: "Build with AI: Prototyping with Gemini &amp; Vertex AI"
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Host -->
+                    <div class="speaker-card">
+                        <div class="speaker-avatar" style="background:linear-gradient(135deg, #6366F1, #8B5CF6);">HC</div>
+                        <div class="speaker-info">
+                            <h4>Human Cloud Engineering</h4>
+                            <p>Host &amp; Infrastructure Enabler</p>
+                            <span style="font-size:0.75rem; color:#A78BFA; font-weight:500;">
+                                Community Keynote &bull; Cloud Architecture Best Practices
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <span style="font-size:0.75rem; color:var(--rh-text-muted);">3. Scale Replicas</span>
-                    <div class="cli-code">
-                        <span>oc scale deployment/redhatgdg-test --replicas=3</span>
-                        <button class="copy-btn" onclick="copyText('oc scale deployment/redhatgdg-test --replicas=3')">Copy</button>
-                    </div>
+            </div>
+
+            <!-- Event Agenda / Schedule Timeline -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">&#128337; Today's Event Schedule &amp; Agenda</h3>
+                    <span class="badge gdg">Nov 22, 2026</span>
                 </div>
-                <div>
-                    <span style="font-size:0.75rem; color:var(--rh-text-muted);">4. Execute Shell in Pod</span>
-                    <div class="cli-code">
-                        <span>oc rsh deployment/redhatgdg-test</span>
-                        <button class="copy-btn" onclick="copyText('oc rsh deployment/redhatgdg-test')">Copy</button>
+
+                <div class="timeline">
+                    <!-- 9:00 AM -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">09:00 AM &ndash; 09:30 AM</div>
+                        <div class="timeline-title">&#128187; Check-in, Registration &amp; Morning Networking</div>
+                        <div class="timeline-desc">Arrival at Human Cloud, attendee badge pickup, Wi-Fi onboarding, and welcome coffee.</div>
                     </div>
-                </div>
-                <div>
-                    <span style="font-size:0.75rem; color:var(--rh-text-muted);">5. Test Liveness Probe via Curl</span>
-                    <div class="cli-code">
-                        <span>curl -i http://localhost:8080/healthz.php</span>
-                        <button class="copy-btn" onclick="copyText('curl -i http://localhost:8080/healthz.php')">Copy</button>
+
+                    <!-- 9:30 AM -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">09:30 AM &ndash; 10:00 AM</div>
+                        <div class="timeline-title">&#128227; Welcome Note &amp; Keynote</div>
+                        <div class="timeline-desc">GDG Pune organizers and Human Cloud leadership welcome developers; overview of DevFest Pune '26 roadmap.</div>
+                    </div>
+
+                    <!-- 10:00 AM -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot highlight"></div>
+                        <div class="timeline-time" style="color:var(--rh-red);">10:00 AM &ndash; 11:30 AM</div>
+                        <div class="timeline-title" style="color:#FFF;">&#9729; Technical Spotlight: Source-to-Image (S2I) on Red Hat OpenShift</div>
+                        <div class="timeline-desc">
+                            Deep dive by Red Hat Authorized Instructor Ashutosh Bhakare. Covers Git-to-Cluster automation, non-root security contexts, build configurations, and Kubernetes health probes (Liveness / Readiness).
+                        </div>
+                    </div>
+
+                    <!-- 11:30 AM -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">11:30 AM &ndash; 01:00 PM</div>
+                        <div class="timeline-title">&#129302; Hands-on Workshop: Build with Gemini &amp; Vertex AI</div>
+                        <div class="timeline-desc">
+                            Building intelligent applications with Google's Gemini models, multimodal prompts, function calling, and deploying AI workflows into cloud-native environments.
+                        </div>
+                    </div>
+
+                    <!-- 1:00 PM -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-time">01:00 PM &ndash; 02:00 PM</div>
+                        <div class="timeline-title">&#129346; Q&amp;A, Swag Distribution &amp; Networking Lunch</div>
+                        <div class="timeline-desc">Interactive open floor discussions, networking with speakers and peers, lunch hosted at Human Cloud.</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
 <script>
+    // Tab switching logic
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+
+        if (tabName === 'openshift') {
+            document.getElementById('tab-openshift').classList.add('active');
+            document.getElementById('btn-tab-openshift').classList.add('active');
+        } else if (tabName === 'gdg') {
+            document.getElementById('tab-gdg').classList.add('active');
+            document.getElementById('btn-tab-gdg').classList.add('active');
+        }
+    }
+
+    function scrollToElement(id) {
+        setTimeout(() => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    }
+
     function updateDefaultPort() {
         const driver = document.getElementById('db-driver').value;
         document.getElementById('db-port').value = driver === 'pgsql' ? '5432' : '3306';
@@ -814,13 +1420,9 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
                 if (!res.success) return;
                 const d = res.data;
 
-                // Update pod hostname
                 document.getElementById('header-pod-name').textContent = d.pod.hostname;
-
-                // Update memory
                 document.getElementById('val-memory-current').textContent = d.runtime.memory_current_formatted;
 
-                // Update Probes Badges & Buttons
                 const liveBadge = document.getElementById('live-liveness-badge');
                 const liveBtn = document.getElementById('btn-toggle-liveness');
                 if (d.probes.liveness.is_simulating_down) {
@@ -863,7 +1465,6 @@ $memoryLimit = ini_get('memory_limit') ?: 'N/A';
         });
     }
 
-    // Auto-refresh metrics every 10 seconds
     setInterval(fetchMetrics, 10000);
 </script>
 </body>
